@@ -1,3 +1,3 @@
 # Horoscope App in Kotlin
 
-![alt text](https://es.vecteezy.com/arte-vectorial/3944234-astrologia-zodiaco-simbolo)
+![alt text](https://img.freepik.com/vector-premium/signos-zodiaco-establecen-simbolos-astrologicos-doce-constelaciones-zodiacales-horoscopo-iconos-redondos-negros_502505-20.jpg?w=1380)
