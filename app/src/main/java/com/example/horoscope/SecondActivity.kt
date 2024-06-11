@@ -47,6 +47,9 @@ class SecondActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val horoscopeResponse = response.body()
                     if (horoscopeResponse != null) {
+                        //TODO
+                        //val horoscopeTextView = findViewById<TextView>(R.id.horoscopeTextView)
+                        //horoscopeTextView.text = horoscopeResponse.data.horoscope_data
                         Log.i("Api Call", "Horoscope: ${horoscopeResponse.data.horoscope_data}")
                     } else {
                         Log.e("Api Call", "Response body is null")
