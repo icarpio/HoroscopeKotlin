@@ -1,12 +1,15 @@
 package com.example.horoscope
 
+import android.content.Intent
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 
+
 // 3. Crear Adapter para que le diga al recyvler view que datos mostrar
-class HoroscopeAdapter (private val dataSet: List<Horoscope>):
+class HoroscopeAdapter (private val dataSet: List<Horoscope>,private val context: Context):
     RecyclerView.Adapter<HoroscopeViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HoroscopeViewHolder {
         // Create a new view, which defines the UI of the list item
@@ -30,7 +33,18 @@ class HoroscopeAdapter (private val dataSet: List<Horoscope>):
         // val context = holder.logoImageView.context
         //holder.logoImageView.setImageDrawable(context.getDrawable(item.logo))
 
+        holder.logoImageView.setOnClickListener {
+            val intent = Intent(context, SecondActivity::class.java)
+            intent.putExtra("Sign", context.getString(item.name)) // Pasa datos a la segunda actividad
+            intent.putExtra("Description", context.getString(item.description))
+            intent.putExtra("Logo", item.logo)
+            context.startActivity(intent)
+        }
+
+
     }
+
+
 
 }
 
