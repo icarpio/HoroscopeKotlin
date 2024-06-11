@@ -2,8 +2,8 @@ package com.example.horoscope
 
 class Horoscope(
     val id: String,
-    val name: String,
-    val description: String,
+    val name: Int,
+    val description: Int,
     val logo: Int
 ) {
 
