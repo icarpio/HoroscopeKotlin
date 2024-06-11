@@ -2,6 +2,7 @@ package com.example.horoscope
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,10 +30,11 @@ class MainActivity : AppCompatActivity() {
 
         // 1. Inicializamos el recyclerView
         recyclerView = findViewById(R.id.HoroscopeRecyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(this)
         //2. Creamos el adapter
         val adapter = HoroscopeAdapter(horoscopeList)
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        //recyclerView.layoutManager = GridLayoutManager(this, 2) // Número de columnas
+
+        //recyclerView.layoutManager = GridLayoutManager(this, 2) // Número de columna
     }
 }
