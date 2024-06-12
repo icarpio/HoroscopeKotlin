@@ -10,6 +10,6 @@ data class HoroscopeResponse(
 
 data class HoroscopeData(
     val date: String,
-    val horoscopeData: String
+    val horoscope_data: String
 )
 

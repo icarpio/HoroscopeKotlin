@@ -22,19 +22,24 @@ class MainActivity : AppCompatActivity() {
         Horoscope("pisces", R.string.horoscope_name_pisces, R.string.horoscope_date_pisces,R.drawable.pisces)
     )
 
+    fun findAll():List<Horoscope> {
+        return horoscopeList
+    }
+    fun findById(id:String) : Horoscope? {
+        return horoscopeList.find { it.id == id }
+    }
     private lateinit var recyclerView: RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         // 1. Inicializamos el recyclerView
         recyclerView = findViewById(R.id.HoroscopeRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
         //2. Creamos el adapter
         recyclerView.adapter  = HoroscopeAdapter(horoscopeList, this)
-
-
         //recyclerView.layoutManager = GridLayoutManager(this, 2) // Número de columna
     }
+
+
 
 }

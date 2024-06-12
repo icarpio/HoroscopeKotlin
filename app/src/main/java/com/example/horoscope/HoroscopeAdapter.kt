@@ -33,11 +33,15 @@ class HoroscopeAdapter (private val dataSet: List<Horoscope>,private val context
         // val context = holder.logoImageView.context
         //holder.logoImageView.setImageDrawable(context.getDrawable(item.logo))
 
-        holder.logoImageView.setOnClickListener {
+        holder.itemView.setOnClickListener {
+            //Redirige a la segunda vista
             val intent = Intent(context, SecondActivity::class.java)
+
+            //Traspasa los valores de la primera vista  ala segunda vista
             intent.putExtra("Sign", context.getString(item.name)) // Pasa datos a la segunda actividad
             intent.putExtra("Description", context.getString(item.description))
             intent.putExtra("Logo", item.logo)
+            intent.putExtra("id", item.id)
             context.startActivity(intent)
         }
 
