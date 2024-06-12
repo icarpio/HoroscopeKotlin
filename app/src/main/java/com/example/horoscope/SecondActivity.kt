@@ -49,18 +49,13 @@ class SecondActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+
+        // Llamar a show() desde un contexto suspendido
         lifecycleScope.launch {
             show(dataId!!)
         }
 
 
-    }
-
-    private fun getRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl("https://horoscope-app-api.vercel.app/api/v1/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
     }
 
     private fun showError(errorApi: String) {
