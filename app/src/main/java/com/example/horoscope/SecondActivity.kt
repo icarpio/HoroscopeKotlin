@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -18,8 +19,10 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import kotlin.math.sign
 
 class SecondActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second)
@@ -46,51 +49,40 @@ class SecondActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
-        if (dataId != null) {
-            getMessage(dataId)
+        lifecycleScope.launch {
+            show(dataId!!)
         }
 
+
+    }
+
+    private fun getRetrofit(): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl("https://horoscope-app-api.vercel.app/api/v1/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
     }
 
     private fun showError(errorApi: String) {
         Toast.makeText(this, errorApi, Toast.LENGTH_SHORT).show()
     }
 
-    private fun getMessage(query: String) {
-            //Retrofit
-            val retrofit = Retrofit.Builder()
-                .baseUrl("https://horoscope-app-api.vercel.app/api/v1/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-            val service = retrofit.create(HoroscopeApiService::class.java)
+    private suspend fun show(id:String){
+        val sign = id  // Cambiar esto por cualquier signo
+        val response = RetrofitInstance.api.getDailyHoroscope(sign = sign)
 
-            val call = service.getDailyHoroscope(query) // Cambia "aries" por el signo que necesites
-            call.enqueue(object : Callback<HoroscopeResponse> {
-                override fun onResponse(
-                    call: Call<HoroscopeResponse>,
-                    response: Response<HoroscopeResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        val horoscopeResponse = response.body()
-                        if (horoscopeResponse != null) {
-                            val bodyTextView = findViewById<TextView>(R.id.bodyTextView)
-                            bodyTextView.text = horoscopeResponse.data.horoscope_data
-                            Log.i("Api Call", "Horoscope: ${horoscopeResponse.data.horoscope_data}")
-                        } else {
-                            showError("Response body is null")
-                            Log.e("Api Call", "Response body is null")
-                        }
-                    } else {
-                        showError("Ha ocurrido un error en la llamda a la API ${response.code()}")
-                    }
-                }
-
-                override fun onFailure(call: Call<HoroscopeResponse>, t: Throwable) {
-                    showError("Ha ocurrido un error ${t.message}")
-                }
-            })
-
-
+        if (response.isSuccessful) {
+            val horoscopeResponse = response.body()
+            if (horoscopeResponse != null && horoscopeResponse.success) {
+                val data = horoscopeResponse.data
+                println("Horoscope for ${data.date}: ${data.horoscope_data}")
+            } else {
+                println("Response was not successful or data is null")
+            }
+        } else {
+            println("Error: ${response.errorBody()?.string()}")
+        }
+    }
 
     }
 
@@ -99,6 +91,6 @@ class SecondActivity : AppCompatActivity() {
 
 
 
-}
+
 
 

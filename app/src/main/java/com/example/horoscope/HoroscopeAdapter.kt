@@ -19,9 +19,6 @@ class HoroscopeAdapter (private val dataSet: List<Horoscope>,private val context
         return HoroscopeViewHolder(view)
     }
 
-    // Create new views (invoked by the layout manager)
-
-
     //override fun getItemCount(): Int = dataSet.size
     override fun getItemCount(): Int {
         return dataSet.size

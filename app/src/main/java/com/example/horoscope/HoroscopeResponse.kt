@@ -9,7 +9,7 @@ data class HoroscopeResponse(
 )
 
 data class HoroscopeData(
-    val date: String,
-    val horoscope_data: String
+    @SerializedName("date") val date: String,
+    @SerializedName("horoscope_data")val horoscope_data: String
 )
 
