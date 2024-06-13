@@ -26,13 +26,15 @@ class SecondActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_HOROSCOPE_ID = "HOROSCOPE_ID"
     }
-    lateinit var horoscope:Horoscope
-    override fun onCreate(savedInstanceState: Bundle?) {
 
+    lateinit var horoscope:Horoscope
+    lateinit var bodyTextView:TextView
+    override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second)
         //Datos pasados desde la primera actividad
+
 
         val id = intent.getStringExtra(EXTRA_HOROSCOPE_ID)
         horoscope = HoroscopeProvider.findById(id!!)!!
@@ -40,6 +42,8 @@ class SecondActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.nameSecondTextView).setText(horoscope.name)
         findViewById<TextView>(R.id.DescSecondTextView).setText(horoscope.description)
         findViewById<ImageView>(R.id.lsImageView).setImageResource(horoscope.logo)
+
+
 
 
         //Boton Atras
@@ -51,27 +55,28 @@ class SecondActivity : AppCompatActivity() {
 
         // Llamar a show() desde un contexto suspendido
         lifecycleScope.launch {
-            show("aries")
+            show(horoscope.id)
         }
     }
     private fun showError(errorApi: String) {
         Toast.makeText(this, errorApi, Toast.LENGTH_SHORT).show()
     }
 
+    //Llamada a la API
     private suspend fun show(id:String){
-        val sign = id  // Cambiar esto por cualquier signo
-        val response = RetrofitInstance.api.getDailyHoroscope(sign = sign)
-
+        val response = RetrofitInstance.api.getDailyHoroscope(sign = id)
         if (response.isSuccessful) {
             val horoscopeResponse = response.body()
             if (horoscopeResponse != null && horoscopeResponse.success) {
                 val data = horoscopeResponse.data
-                println("Horoscope for ${data.date}: ${data.horoscope_data}")
+                findViewById<TextView>(R.id.bodyTextView).text = data.horoscope_data
+                findViewById<TextView>(R.id.dateTextView).text = data.date
+                println("${data.date}: ${data.horoscope_data}")
             } else {
-                println("Response was not successful or data is null")
+                showError("Response was not successful or data is null")
             }
         } else {
-            println("Error: ${response.errorBody()?.string()}")
+            showError("Error: ${response.errorBody()?.string()}")
         }
     }
 

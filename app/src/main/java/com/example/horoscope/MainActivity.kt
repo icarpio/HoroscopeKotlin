@@ -23,16 +23,16 @@ class MainActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.HoroscopeRecyclerView)
 
         //2. Creamos el adapter
-
-        //recyclerView.layoutManager = GridLayoutManager(this, 2) // Número de columna
-
+              //Adapter - private val onItemClickListener: (Int) -> Unit) :
         val adapter = HoroscopeAdapter(horoscopeList) { position ->
             navigateToDetail(horoscopeList[position])
         }
         recyclerView.adapter  = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
+        //recyclerView.layoutManager = GridLayoutManager(this, 2) // Número de columna
 
     }
+
 
     fun navigateToDetail(horoscope: Horoscope) {
         val intent: Intent = Intent(this, SecondActivity::class.java)

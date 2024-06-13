@@ -1,6 +1,7 @@
 package com.example.horoscope
 
 class HoroscopeProvider {
+        //companion object - objecto estatico, no es necesario instanciarlo
         companion object {
             private val horoscopeList: List<Horoscope> = listOf(
                 Horoscope("aries", R.string.horoscope_name_aries, R.string.horoscope_date_aries,R.drawable.aries),
@@ -21,7 +22,7 @@ class HoroscopeProvider {
             }
 
             fun findById(id: String) : Horoscope? {
-                return horoscopeList.find { it.id == id }
+                return horoscopeList.find { it.id == id } //it - cada elemento de la lista
             }
         }
 }
