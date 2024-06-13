@@ -23,27 +23,26 @@ import kotlin.math.sign
 
 class SecondActivity : AppCompatActivity() {
 
+    companion object {
+        const val EXTRA_HOROSCOPE_ID = "HOROSCOPE_ID"
+    }
+    lateinit var horoscope:Horoscope
     override fun onCreate(savedInstanceState: Bundle?) {
+
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second)
         //Datos pasados desde la primera actividad
 
-        //Nombre traido del primer activity
-        val dataName = intent.getStringExtra("Sign")
-        val nameSecondTextView = findViewById<TextView>(R.id.nameSecondTextView)
-        nameSecondTextView.text = dataName
+        val id = intent.getStringExtra(EXTRA_HOROSCOPE_ID)
+        horoscope = HoroscopeProvider.findById(id!!)!!
 
-        //Descripcion traida del primer activity
-        val dataDesc = intent.getStringExtra("Description")
-        val DescSecondTextView = findViewById<TextView>(R.id.DescSecondTextView)
-        DescSecondTextView.text = dataDesc
+        findViewById<TextView>(R.id.nameSecondTextView).setText(horoscope.name)
+        findViewById<TextView>(R.id.DescSecondTextView).setText(horoscope.description)
+        findViewById<ImageView>(R.id.lsImageView).setImageResource(horoscope.logo)
 
-        val imageResId = intent.getIntExtra("Logo", 0)
-        val lsImageView: ImageView = findViewById(R.id.lsImageView)
-        lsImageView.setImageResource(imageResId)
 
-        val dataId = intent.getStringExtra("id")
-
+        //Boton Atras
         val backButton: Button = findViewById<Button>(R.id.backButton)
         backButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
@@ -52,12 +51,9 @@ class SecondActivity : AppCompatActivity() {
 
         // Llamar a show() desde un contexto suspendido
         lifecycleScope.launch {
-            show(dataId!!)
+            show("aries")
         }
-
-
     }
-
     private fun showError(errorApi: String) {
         Toast.makeText(this, errorApi, Toast.LENGTH_SHORT).show()
     }

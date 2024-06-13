@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 
 // 3. Crear Adapter para que le diga al recyvler view que datos mostrar
-class HoroscopeAdapter (private val dataSet: List<Horoscope>,private val context: Context):
+class HoroscopeAdapter (private val dataSet: List<Horoscope>,private val onItemClickListener: (Int) -> Unit) :
     RecyclerView.Adapter<HoroscopeViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HoroscopeViewHolder {
         // Create a new view, which defines the UI of the list item
@@ -29,8 +29,8 @@ class HoroscopeAdapter (private val dataSet: List<Horoscope>,private val context
         holder.render(item)
         // val context = holder.logoImageView.context
         //holder.logoImageView.setImageDrawable(context.getDrawable(item.logo))
-
         holder.itemView.setOnClickListener {
+            /*
             //Redirige a la segunda vista
             val intent = Intent(context, SecondActivity::class.java)
 
@@ -39,7 +39,8 @@ class HoroscopeAdapter (private val dataSet: List<Horoscope>,private val context
             intent.putExtra("Description", context.getString(item.description))
             intent.putExtra("Logo", item.logo)
             intent.putExtra("id", item.id)
-            context.startActivity(intent)
+            context.startActivity(intent)*/
+            onItemClickListener(position)
         }
 
 
