@@ -4,6 +4,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -27,8 +30,8 @@ class SecondActivity : AppCompatActivity() {
         const val EXTRA_HOROSCOPE_ID = "HOROSCOPE_ID"
     }
 
-    lateinit var horoscope:Horoscope
-    lateinit var bodyTextView:TextView
+    lateinit var horoscope: Horoscope
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -36,14 +39,12 @@ class SecondActivity : AppCompatActivity() {
         //Datos pasados desde la primera actividad
 
 
-        val id = intent.getStringExtra(EXTRA_HOROSCOPE_ID)
-        horoscope = HoroscopeProvider.findById(id!!)!!
+        val id: String = intent.getStringExtra(EXTRA_HOROSCOPE_ID)!!
+        horoscope  = HoroscopeProvider.findById(id)!!
 
         findViewById<TextView>(R.id.nameSecondTextView).setText(horoscope.name)
         findViewById<TextView>(R.id.DescSecondTextView).setText(horoscope.description)
         findViewById<ImageView>(R.id.lsImageView).setImageResource(horoscope.logo)
-
-
 
 
         //Boton Atras
@@ -57,13 +58,38 @@ class SecondActivity : AppCompatActivity() {
         lifecycleScope.launch {
             show(horoscope.id)
         }
+
+
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.menu_activity_second, menu)
+        return true
+    }
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_share -> {
+                // Acción para opción 1
+                true
+            }
+            R.id.action_favourite -> {
+                // Acción para opción 2
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+
+    }
+
+
     private fun showError(errorApi: String) {
         Toast.makeText(this, errorApi, Toast.LENGTH_SHORT).show()
     }
 
     //Llamada a la API
-    private suspend fun show(id:String){
+    private suspend fun show(id: String) {
         val response = RetrofitInstance.api.getDailyHoroscope(sign = id)
         if (response.isSuccessful) {
             val horoscopeResponse = response.body()
@@ -80,7 +106,8 @@ class SecondActivity : AppCompatActivity() {
         }
     }
 
-    }
+
+}
 
 
 

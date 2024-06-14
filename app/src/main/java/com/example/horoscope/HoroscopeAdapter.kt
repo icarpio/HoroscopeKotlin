@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 // 3. Crear Adapter para que le diga al recyvler view que datos mostrar
 //
 
-class HoroscopeAdapter (private val dataSet: List<Horoscope>,private val onItemClickListener: (Int) -> Unit) :
+class HoroscopeAdapter (private var dataSet: List<Horoscope>,private val onItemClickListener: (Int) -> Unit) :
     RecyclerView.Adapter<HoroscopeViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HoroscopeViewHolder {
         // Create a new view, which defines the UI of the list item
@@ -44,7 +44,11 @@ class HoroscopeAdapter (private val dataSet: List<Horoscope>,private val onItemC
             onItemClickListener(position)
         }
 
-
+    }
+    // Este método sirve para actualizar los datos
+    fun updateData (newDataSet: List<Horoscope>) {
+        dataSet = newDataSet
+        notifyDataSetChanged()
     }
 
 
