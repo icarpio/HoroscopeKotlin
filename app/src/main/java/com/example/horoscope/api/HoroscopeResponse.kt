@@ -1,4 +1,4 @@
-package com.example.horoscope
+package com.example.horoscope.api
 
 import com.google.gson.annotations.SerializedName
 

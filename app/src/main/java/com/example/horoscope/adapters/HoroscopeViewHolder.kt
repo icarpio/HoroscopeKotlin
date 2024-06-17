@@ -1,9 +1,11 @@
-package com.example.horoscope
+package com.example.horoscope.adapters
 
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.horoscope.R
+import com.example.horoscope.data.Horoscope
 
 
 class HoroscopeViewHolder (view: View) : RecyclerView.ViewHolder(view) {
@@ -19,7 +21,7 @@ class HoroscopeViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         logoImageView = view.findViewById(R.id.logoImageView)
     }
 
-    fun render(item:Horoscope){
+    fun render(item: Horoscope){
         nameTextView.setText(item.name)
         descriptionTextView.setText(item.description)
         logoImageView.setImageResource(item.logo)

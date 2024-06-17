@@ -1,4 +1,4 @@
-package com.example.horoscope
+package com.example.horoscope.data
 
 class Horoscope(
     val id: String,

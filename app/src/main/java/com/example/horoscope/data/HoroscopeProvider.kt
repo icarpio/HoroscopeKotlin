@@ -1,4 +1,6 @@
-package com.example.horoscope
+package com.example.horoscope.data
+
+import com.example.horoscope.R
 
 class HoroscopeProvider {
         //companion object - objecto estatico, no es necesario instanciarlo

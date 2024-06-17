@@ -1,9 +1,8 @@
-package com.example.horoscope
+package com.example.horoscope.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -12,17 +11,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
+import com.example.horoscope.data.Horoscope
+import com.example.horoscope.data.HoroscopeProvider
+import com.example.horoscope.R
+import com.example.horoscope.api.RetrofitInstance
+import com.example.horoscope.utils.SessionManager
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import kotlin.math.sign
 
 class SecondActivity : AppCompatActivity() {
 
@@ -31,13 +25,18 @@ class SecondActivity : AppCompatActivity() {
     }
 
     lateinit var horoscope: Horoscope
+    lateinit var  favoriteMenuItem:MenuItem
+    lateinit var session:SessionManager
+
+
+    var isFavorite = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second)
-        //Datos pasados desde la primera actividad
 
+        session = SessionManager(this)
 
         val id: String = intent.getStringExtra(EXTRA_HOROSCOPE_ID)!!
         horoscope  = HoroscopeProvider.findById(id)!!
@@ -59,11 +58,9 @@ class SecondActivity : AppCompatActivity() {
             show(horoscope.id)
         }
 
-
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu_activity_second, menu)
         return true

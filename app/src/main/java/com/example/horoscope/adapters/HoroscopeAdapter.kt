@@ -1,17 +1,16 @@
-package com.example.horoscope
+package com.example.horoscope.adapters
 
-import android.content.Intent
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-
+import com.example.horoscope.R
+import com.example.horoscope.data.Horoscope
 
 
 // 3. Crear Adapter para que le diga al recyvler view que datos mostrar
 //
 
-class HoroscopeAdapter (private var dataSet: List<Horoscope>,private val onItemClickListener: (Int) -> Unit) :
+class HoroscopeAdapter (private var dataSet: List<Horoscope>, private val onItemClickListener: (Int) -> Unit) :
     RecyclerView.Adapter<HoroscopeViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HoroscopeViewHolder {
         // Create a new view, which defines the UI of the list item
