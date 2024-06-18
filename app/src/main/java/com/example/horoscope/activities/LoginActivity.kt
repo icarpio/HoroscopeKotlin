@@ -25,11 +25,19 @@ class LoginActivity : AppCompatActivity() {
             return
         }*/
 
+
+
+
         val loginButton: Button = findViewById(R.id.loginButton)
         loginButton.setOnClickListener {
             val userNameEditText = findViewById<EditText>(R.id.usernameEditText)
             val username = userNameEditText.text.toString()
-            login(username)
+            if (username.isEmpty()) {
+                userNameEditText.error = "Please enter a username!"
+                userNameEditText.requestFocus()
+            } else {
+                login(username)
+            }
         }
     }
 

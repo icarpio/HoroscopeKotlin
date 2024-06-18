@@ -7,8 +7,10 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
@@ -17,7 +19,10 @@ import com.example.horoscope.data.HoroscopeProvider
 import com.example.horoscope.R
 import com.example.horoscope.api.RetrofitInstance
 import com.example.horoscope.utils.SessionManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SecondActivity : AppCompatActivity() {
 
@@ -50,15 +55,16 @@ class SecondActivity : AppCompatActivity() {
 
 
         //Boton Atras
-        val backButton: Button = findViewById<Button>(R.id.backButton)
+        /*val backButton: Button = findViewById<Button>(R.id.backButton)
         backButton.setOnClickListener {
             finish()
-        }
+        }*/
 
-        // Llamar a show() desde un contexto suspendido
-        lifecycleScope.launch {
-            show(horoscope.id)
-        }
+        supportActionBar?.setTitle(horoscope.name)
+        supportActionBar?.setSubtitle(horoscope.description)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        show(horoscope.id)
 
     }
 
@@ -73,7 +79,10 @@ class SecondActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-
+            android.R.id.home -> {
+                finish()
+                true
+            }
             R.id.action_favourite -> {
                 if (isFavorite) {
                     session.setFavoriteHoroscope("")
@@ -105,20 +114,35 @@ class SecondActivity : AppCompatActivity() {
     }
 
     //Llamada a la API
-    private suspend fun show(id: String) {
-        val response = RetrofitInstance.api.getDailyHoroscope(sign = id)
-        if (response.isSuccessful) {
-            val horoscopeResponse = response.body()
-            if (horoscopeResponse != null && horoscopeResponse.success) {
-                val data = horoscopeResponse.data
-                findViewById<TextView>(R.id.bodyTextView).text = data.horoscope_data
-                findViewById<TextView>(R.id.dateTextView).text = data.date
-                println("${data.date}: ${data.horoscope_data}")
-            } else {
-                showError("Response was not successful or data is null")
+    private fun show(id: String) {
+        val progressBar: ProgressBar = findViewById(R.id.progressBar)
+        progressBar.visibility = View.VISIBLE
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = RetrofitInstance.api.getDailyHoroscope(sign = id)
+                withContext(Dispatchers.Main) {
+                    if (response.isSuccessful) {
+                        val horoscopeResponse = response.body()
+                        if (horoscopeResponse != null && horoscopeResponse.success) {
+                            val data = horoscopeResponse.data
+                            findViewById<TextView>(R.id.bodyTextView).text = data.horoscope_data
+                            findViewById<TextView>(R.id.dateTextView).text = data.date
+                            println("${data.date}: ${data.horoscope_data}")
+                        } else {
+                            showError("Response was not successful or data is null")
+                        }
+                    } else {
+                        showError("Error: ${response.errorBody()?.string()}")
+                    }
+                    progressBar.visibility = View.GONE
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    showError("Exception: ${e.message}")
+                    progressBar.visibility = View.GONE
+                }
             }
-        } else {
-            showError("Error: ${response.errorBody()?.string()}")
         }
     }
 
