@@ -26,5 +26,9 @@ class HoroscopeProvider {
             fun findById(id: String) : Horoscope? {
                 return horoscopeList.find { it.id == id } //it - cada elemento de la lista
             }
+
+            fun getIndex(horoscope: Horoscope) : Int {
+                return horoscopeList.indexOf(horoscope)
+            }
         }
 }

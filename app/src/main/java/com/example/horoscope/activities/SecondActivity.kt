@@ -33,9 +33,16 @@ class SecondActivity : AppCompatActivity() {
     lateinit var horoscope: Horoscope
     lateinit var favoriteMenuItem:MenuItem
     lateinit var session:SessionManager
+    lateinit var horoscopes: List<Horoscope>
+
 
 
     var isFavorite = false
+    var currentPosition = 0
+
+    lateinit var nameSecondTextView: TextView
+    lateinit var descSecondTextView: TextView
+    lateinit var lsImageView: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -46,12 +53,15 @@ class SecondActivity : AppCompatActivity() {
 
         val id: String = intent.getStringExtra(EXTRA_HOROSCOPE_ID)!!
         horoscope  = HoroscopeProvider.findById(id)!!
+        currentPosition = HoroscopeProvider.getIndex(horoscope)
 
         isFavorite = session.getFavoriteHoroscope()?.equals(horoscope.id) ?: false
 
-        findViewById<TextView>(R.id.nameSecondTextView).setText(horoscope.name)
-        findViewById<TextView>(R.id.DescSecondTextView).setText(horoscope.description)
-        findViewById<ImageView>(R.id.lsImageView).setImageResource(horoscope.logo)
+        nameSecondTextView = findViewById(R.id.nameSecondTextView)
+        descSecondTextView = findViewById(R.id.DescSecondTextView)
+        lsImageView = findViewById(R.id.lsImageView)
+
+        loadData()
 
 
         //Boton Atras
@@ -60,14 +70,35 @@ class SecondActivity : AppCompatActivity() {
             finish()
         }*/
 
-        supportActionBar?.setTitle(horoscope.name)
-        supportActionBar?.setSubtitle(horoscope.description)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        show(horoscope.id)
+        // Obtiene la lista de todos los horóscopos
+        horoscopes = HoroscopeProvider.findAll()
+
+        // Botón para cargar el siguiente horóscopo
+        val btnSiguiente: Button = findViewById(R.id.nextButton)
+        btnSiguiente.setOnClickListener {
+            //Suma uno a la posicion actual
+            currentPosition++
+
+            //Si llega a la ultima posicion, vuelve a la posicion 0
+            if (currentPosition >= horoscopes.size) {
+                currentPosition = 0
+            }
+
+            horoscope = horoscopes[currentPosition]
+            loadData()
+        }
 
     }
-
+    fun loadData() {
+        nameSecondTextView.setText(horoscope.name)
+        descSecondTextView.setText(horoscope.description)
+        lsImageView.setImageResource(horoscope.logo)
+        supportActionBar?.setTitle(horoscope.name)
+        supportActionBar?.setSubtitle(horoscope.description)
+        show(horoscope.id)
+    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater: MenuInflater = menuInflater
