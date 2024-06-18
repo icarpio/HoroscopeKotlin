@@ -3,6 +3,7 @@ package com.example.horoscope.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -25,7 +26,7 @@ class SecondActivity : AppCompatActivity() {
     }
 
     lateinit var horoscope: Horoscope
-    lateinit var  favoriteMenuItem:MenuItem
+    lateinit var favoriteMenuItem:MenuItem
     lateinit var session:SessionManager
 
 
@@ -41,6 +42,8 @@ class SecondActivity : AppCompatActivity() {
         val id: String = intent.getStringExtra(EXTRA_HOROSCOPE_ID)!!
         horoscope  = HoroscopeProvider.findById(id)!!
 
+        isFavorite = session.getFavoriteHoroscope()?.equals(horoscope.id) ?: false
+
         findViewById<TextView>(R.id.nameSecondTextView).setText(horoscope.name)
         findViewById<TextView>(R.id.DescSecondTextView).setText(horoscope.description)
         findViewById<ImageView>(R.id.lsImageView).setImageResource(horoscope.logo)
@@ -49,8 +52,7 @@ class SecondActivity : AppCompatActivity() {
         //Boton Atras
         val backButton: Button = findViewById<Button>(R.id.backButton)
         backButton.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+            finish()
         }
 
         // Llamar a show() desde un contexto suspendido
@@ -60,19 +62,36 @@ class SecondActivity : AppCompatActivity() {
 
     }
 
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu_activity_second, menu)
+        favoriteMenuItem = menu.findItem(R.id.action_favourite)
+        setFavoriteIcon()
         return true
     }
-    override fun onContextItemSelected(item: MenuItem): Boolean {
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_share -> {
-                // Acción para opción 1
+
+            R.id.action_favourite -> {
+                if (isFavorite) {
+                    session.setFavoriteHoroscope("")
+                } else {
+                    session.setFavoriteHoroscope(horoscope.id)
+                }
+                isFavorite = !isFavorite
+                setFavoriteIcon()
                 true
             }
-            R.id.action_favourite -> {
-                // Acción para opción 2
+            R.id.action_share -> {
+                val sendIntent = Intent()
+                sendIntent.setAction(Intent.ACTION_SEND)
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.")
+                sendIntent.setType("text/plain")
+
+                val shareIntent = Intent.createChooser(sendIntent, null)
+                startActivity(shareIntent)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -100,6 +119,14 @@ class SecondActivity : AppCompatActivity() {
             }
         } else {
             showError("Error: ${response.errorBody()?.string()}")
+        }
+    }
+
+    fun setFavoriteIcon(){
+        if(isFavorite){
+            favoriteMenuItem.setIcon(R.drawable.favorite)
+        }else{
+            favoriteMenuItem.setIcon(R.drawable.favorite_border)
         }
     }
 
