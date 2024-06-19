@@ -8,12 +8,24 @@
     android:background="#E0F7FA">
 
 
-    <ImageView
-        android:id="@+id/logoImageView"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        >
-    </ImageView>
+    <FrameLayout
+        android:id="@+id/favoriteFrame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/lsImageView"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginBottom="8dp"/>
+        <ImageView
+            android:id="@+id/favoriteImageView"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/favorite"
+            android:layout_gravity="bottom|end"/>
+    </FrameLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -31,7 +31,7 @@ class SecondActivity : AppCompatActivity() {
     }
 
     lateinit var horoscope: Horoscope
-    lateinit var favoriteMenuItem:MenuItem
+    var favoriteMenuItem:MenuItem? = null
     lateinit var session:SessionManager
     lateinit var horoscopes: List<Horoscope>
 
@@ -55,8 +55,6 @@ class SecondActivity : AppCompatActivity() {
         horoscope  = HoroscopeProvider.findById(id)!!
         currentPosition = HoroscopeProvider.getIndex(horoscope)
 
-        isFavorite = session.getFavoriteHoroscope()?.equals(horoscope.id) ?: false
-
         nameSecondTextView = findViewById(R.id.nameSecondTextView)
         descSecondTextView = findViewById(R.id.DescSecondTextView)
         lsImageView = findViewById(R.id.lsImageView)
@@ -71,7 +69,6 @@ class SecondActivity : AppCompatActivity() {
         }*/
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
         // Obtiene la lista de todos los horóscopos
         horoscopes = HoroscopeProvider.findAll()
 
@@ -92,12 +89,16 @@ class SecondActivity : AppCompatActivity() {
 
     }
     fun loadData() {
+        //Primero preguntamos si es favorito
+        isFavorite = session.getFavoriteHoroscope()?.equals(horoscope.id) ?: false
+        Log.i("isFavorite",isFavorite.toString())
         nameSecondTextView.setText(horoscope.name)
         descSecondTextView.setText(horoscope.description)
         lsImageView.setImageResource(horoscope.logo)
         supportActionBar?.setTitle(horoscope.name)
         supportActionBar?.setSubtitle(horoscope.description)
         show(horoscope.id)
+        setFavoriteIcon()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -148,7 +149,6 @@ class SecondActivity : AppCompatActivity() {
     private fun show(id: String) {
         val progressBar: ProgressBar = findViewById(R.id.progressBar)
         progressBar.visibility = View.VISIBLE
-
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = RetrofitInstance.api.getDailyHoroscope(sign = id)
@@ -179,9 +179,9 @@ class SecondActivity : AppCompatActivity() {
 
     fun setFavoriteIcon(){
         if(isFavorite){
-            favoriteMenuItem.setIcon(R.drawable.favorite)
+            favoriteMenuItem?.setIcon(R.drawable.favorite)
         }else{
-            favoriteMenuItem.setIcon(R.drawable.favorite_border)
+            favoriteMenuItem?.setIcon(R.drawable.favorite_border)
         }
     }
 
